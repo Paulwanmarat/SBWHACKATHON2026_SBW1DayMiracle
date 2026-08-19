@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Environment & Secrets
+.env
+*.log
+
+# Build Artifacts
+dist/
+build/
+*.db
+learnex.db
+
+# IDE & System
+.vscode/
+.idea/
+.DS_Store

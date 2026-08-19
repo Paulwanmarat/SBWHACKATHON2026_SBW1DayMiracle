@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Menlo', 'Monaco', 'Consolas', monospace;
+}
+
+/* ── Global Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  background: #09090b;
+  color: #fafafa;
+  line-height: 1.6;
+}
+
+body {
+  background: #09090b;
+  color: #fafafa;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root { min-height: 100vh; }
+
+/* ── Custom Scrollbars ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #09090b; }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+/* ── Layout Offsets (Seamless Mobile <1024px & Desktop ≥1024px) ── */
+.desktop-main-wrapper {
+  margin-top: 60px !important;
+  padding-top: 1.5rem !important;
+  padding-bottom: 4rem !important;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .desktop-main-wrapper {
+    padding-left: 240px !important;
+    padding-top: 2rem !important;
+  }
+  .desktop-topbar-offset {
+    left: 240px !important;
+  }
+}
+
+/* ── Mobile vs PC Card Spacing Rules ── */
+.card {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 18px;
+  padding: 1.25rem;
+  margin-bottom: 2rem !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.4);
+}
+
+@media (min-width: 640px) {
+  .card {
+    border-radius: 20px;
+    padding: 1.75rem;
+    margin-bottom: 2.5rem !important;
+  }
+}
+
+.card:hover {
+  border-color: #3f3f46;
+  box-shadow: 0 10px 40px -4px rgba(0, 0, 0, 0.6);
+}
+
+.grid {
+  margin-bottom: 2rem !important;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    margin-bottom: 2.5rem !important;
+  }
+}
+
+.card-surface {
+  background: #111113;
+  border: 1px solid #27272a;
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .card-surface {
+    padding: 1.25rem;
+  }
+}
+
+/* ── Typography & Headings ── */
+h1, h2, h3, h4 {
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+p {
+  line-height: 1.65;
+}
+
+/* ── Responsive Buttons ── */
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px 0 rgba(37, 99, 235, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 640px) {
+  .btn-primary {
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    padding: 0.625rem 1.25rem;
+  }
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px 0 rgba(37, 99, 235, 0.5);
+}
+
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: #18181b;
+  color: #d4d4d8;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+@media (min-width: 640px) {
+  .btn-ghost {
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    padding: 0.625rem 1.25rem;
+  }
+}
+
+.btn-ghost:hover {
+  background: #27272a;
+  color: #ffffff;
+  border-color: #3f3f46;
+}
+
+/* ── Badges & Pills ── */
+.pill {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .pill {
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+.pill-blue { background: rgba(37, 99, 235, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
+.pill-green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+.pill-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
+.pill-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+
+/* ── Data Tables ── */
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.data-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a1a1aa;
+  background: #111113;
+  border-bottom: 1px solid #27272a;
+  white-space: nowrap;
+}
+.data-table th:first-child { border-top-left-radius: 14px; }
+.data-table th:last-child { border-top-right-radius: 14px; }
+
+.data-table td {
+  padding: 0.875rem 1rem;
+  font-size: 0.8125rem;
+  border-bottom: 1px solid #1c1c1f;
+  background: #18181b;
+  line-height: 1.6;
+}
+
+@media (min-width: 640px) {
+  .data-table th { padding: 1rem 1.25rem; font-size: 0.75rem; }
+  .data-table td { padding: 1rem 1.25rem; font-size: 0.875rem; }
+}
+
+.data-table tbody tr { transition: background 0.15s ease; }
+.data-table tbody tr:hover td { background: #222226; }
+.data-table tbody tr:last-child td:first-child { border-bottom-left-radius: 14px; }
+.data-table tbody tr:last-child td:last-child { border-bottom-right-radius: 14px; }
+
+/* ── Inputs ── */
+input[type="text"], input[type="search"], select, textarea {
+  background: #18181b;
+  border: 1px solid #27272a;
+  color: #fafafa;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  input[type="text"], input[type="search"], select, textarea {
+    font-size: 0.875rem;
+    padding: 0.625rem 1rem;
+  }
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* ── KaTeX Styling ── */
+.katex { font-size: 1.05em !important; color: #93c5fd !important; }
+.katex-display { margin: 0.75em 0 !important; padding: 0.75rem 1rem; background: #09090b; border: 1px solid #27272a; border-radius: 12px; }
+
+.sidebar-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 45;
+}
+
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }

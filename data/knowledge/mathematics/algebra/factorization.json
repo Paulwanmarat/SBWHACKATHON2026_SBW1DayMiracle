@@ -1,0 +1,31 @@
+{
+  "concept": "Factorization",
+  "subject": "Mathematics",
+  "topic": "Algebra",
+  "grade_level": "Grade 9-10",
+  "prerequisites": ["Linear Equations", "Algebraic Expressions"],
+  "downstream_concepts": ["Quadratic Equations"],
+  "learning_objective": "Students will identify factor pairs of quadratic expressions (x² + bx + c) and apply correct factoring techniques.",
+  "explanation": "Factoring a quadratic expression involves finding two linear expressions whose product equals the original quadratic expression. For x² + bx + c, we search for factor pairs (p, q) of c such that p + q = b.",
+  "common_misconceptions": [
+    {
+      "id": "MIS_FACT_01",
+      "name": "Incorrect factor-pair selection",
+      "description": "Student selects factors of c that multiply to c but fail to sum to b (e.g., choosing 1 and 6 instead of 2 and 3 for x² + 5x + 6).",
+      "pattern": "(x+1)(x+6) for x²+5x+6",
+      "remediation": "Construct a systematic table listing all factor pairs of c with their corresponding sums."
+    },
+    {
+      "id": "MIS_FACT_02",
+      "name": "Difference of squares confusion",
+      "description": "Student treats a difference of squares x² - a² as a perfect square trinomial (x - a)².",
+      "pattern": "(x-a)(x-a) for x²-a²",
+      "remediation": "Emphasize that the middle x term has a coefficient of 0: x² + 0x - a² = (x + a)(x - a)."
+    }
+  ],
+  "worked_example": "Problem: Factor x² + 7x + 12.\nStep 1: Identify c = 12, b = 7.\nStep 2: List factor pairs of 12:\n  - 1 x 12 (sum = 13)\n  - 2 x 6  (sum = 8)\n  - 3 x 4  (sum = 7) -> MATCH!\nStep 3: Write factors as (x + 3)(x + 4).",
+  "citations": [
+    "National Council of Teachers of Mathematics (NCTM) Algebra Standards",
+    "LEARNEX Mathematics Knowledge Base v1.0"
+  ]
+}

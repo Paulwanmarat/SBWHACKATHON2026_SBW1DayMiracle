@@ -1,0 +1,31 @@
+{
+  "concept": "Quadratic Equations",
+  "subject": "Mathematics",
+  "topic": "Algebra",
+  "grade_level": "Grade 9-10",
+  "prerequisites": ["Factorization", "Linear Equations"],
+  "downstream_concepts": ["Polynomial Functions", "Calculus"],
+  "learning_objective": "Students will solve quadratic equations using factoring and the quadratic formula, and interpret the discriminant.",
+  "explanation": "Quadratic equations take the standard form ax² + bx + c = 0. Roots are the values of x that make the equation true, found via factoring or the quadratic formula x = (-b ± √(b² - 4ac)) / 2a.",
+  "common_misconceptions": [
+    {
+      "id": "MIS_QUAD_01",
+      "name": "Missing negative root",
+      "description": "Student forgets that x² = k yields both positive and negative roots x = ±√k.",
+      "pattern": "x = 4 for x² = 16",
+      "remediation": "Always write x = ±√k when taking the square root of both sides of an equation."
+    },
+    {
+      "id": "MIS_QUAD_02",
+      "name": "Sign error in quadratic formula",
+      "description": "Student misapplies -b when b is already negative.",
+      "pattern": "x = -5 ± ... for x² - 5x + 6 = 0",
+      "remediation": "Use parentheses when substituting: -(-5) = +5."
+    }
+  ],
+  "worked_example": "Solve x² - 5x + 6 = 0.\nStep 1: Factor into (x - 2)(x - 3) = 0.\nStep 2: Set each factor equal to zero: x - 2 = 0 or x - 3 = 0.\nStep 3: Solutions are x = 2 and x = 3.",
+  "citations": [
+    "Common Core State Standards for Mathematics - High School Algebra",
+    "LEARNEX Mathematics Knowledge Base v1.0"
+  ]
+}

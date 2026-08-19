@@ -35,7 +35,7 @@ export default function TopBar({ isDemo, onMenuClick, onOpenCommandPalette }: To
 
         <button
           onClick={onOpenCommandPalette}
-          className="hidden sm:flex items-center gap-3 ml-6 px-3 py-1.5 rounded-xl bg-zinc-900/90 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-xs text-zinc-400 hover:text-zinc-200 transition-all shadow-xs"
+          className="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-zinc-900/90 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-xs text-zinc-400 hover:text-zinc-200 transition-all shadow-xs"
         >
           <Search className="w-3.5 h-3.5 text-zinc-500" />
           <span className="font-medium">Search dashboard or student...</span>

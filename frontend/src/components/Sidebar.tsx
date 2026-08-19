@@ -20,19 +20,25 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
         }`}
     >
       {/* Sidebar Logo Header */}
-      <div className="h-[60px] px-5 flex items-center justify-between border-b border-zinc-800/80 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-500 flex items-center justify-center shadow-md shadow-blue-500/20">
-            <GraduationCap className="w-4.5 h-4.5 text-white" />
+      <div className="relative h-[72px] flex items-center justify-center border-b border-zinc-800/80 shrink-0">
+        <div className="flex flex-col items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-500 flex items-center justify-center shadow-md shadow-blue-500/20 mb-1.5">
+            <GraduationCap className="w-4 h-4 text-white" />
           </div>
-          <div className="leading-tight">
-            <span className="text-sm font-extrabold text-white tracking-tight block">LEARNEX</span>
-            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest">AI Engine v2.5</span>
+
+          <div className="leading-none text-center">
+            <span className="text-sm font-extrabold text-white tracking-tight block">
+              LEARNEX
+            </span>
+            <span className="text-[8px] font-bold text-blue-400 uppercase tracking-[0.12em] block mt-0.5">
+              AI ENGINE V2.5
+            </span>
           </div>
         </div>
+
         <button
           onClick={onClose}
-          className="lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -52,8 +58,8 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
               to={item.to}
               onClick={onClose}
               className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${active
-                  ? 'bg-blue-600/10 text-white border border-blue-500/30 shadow-xs'
-                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60'
+                ? 'bg-blue-600/10 text-white border border-blue-500/30 shadow-xs'
+                : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60'
                 }`}
             >
               <div className="flex items-center gap-3">

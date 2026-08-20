@@ -29,11 +29,25 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://frontend-learnex-11.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app|https://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal Server Error: {str(exc)}"},
+    )
 
 # In-memory store for the current analysis session
 _current_df: Optional[pd.DataFrame] = None
@@ -187,7 +201,7 @@ async def upload_assessment(file: UploadFile = File(...)):
     """Upload a CSV assessment file and analyze it."""
     global _current_df, _current_analysis, _is_demo
 
-    if not file.filename.endswith(".csv"):
+    if not file.filename or not file.filename.lower().endswith(".csv"):
         raise HTTPException(status_code=400, detail="Please upload a CSV file.")
 
     try:
@@ -197,7 +211,7 @@ async def upload_assessment(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"Could not read CSV file: {str(e)}")
 
     # Normalize columns
-    df.columns = [c.strip().lower() for c in df.columns]
+    df.columns = [str(c).strip().lower() for c in df.columns]
 
     # Validate required columns
     missing = [col for col in REQUIRED_COLUMNS if col not in df.columns]
@@ -210,39 +224,59 @@ async def upload_assessment(file: UploadFile = File(...)):
     if len(df) == 0:
         raise HTTPException(status_code=400, detail="The CSV file is empty.")
 
-    # Clear and reload
-    clear_db()
-    _current_df = df
-    _current_analysis = analyze_responses(df)
-    _is_demo = False
+    try:
+        # Clear and reload
+        clear_db()
+        _current_df = df
+        _current_analysis = analyze_responses(df)
+        _is_demo = False
 
-    # Save to DB
-    conn = get_db()
-    cursor = conn.cursor()
-    for sid in df["student_id"].unique():
-        cursor.execute("INSERT OR IGNORE INTO students (student_id) VALUES (?)", (str(sid),))
-    for _, row in df.drop_duplicates(subset=["question_id"]).iterrows():
-        cursor.execute(
-            "INSERT OR IGNORE INTO questions (question_id, question_text, correct_answer, subject, topic, concept) VALUES (?, ?, ?, ?, ?, ?)",
-            (str(row["question_id"]), str(row.get("question", "")), str(row["correct_answer"]), str(row.get("subject", "")), str(row.get("topic", "")), str(row.get("concept", ""))),
-        )
-    for _, row in df.iterrows():
-        is_correct = row.get("is_correct", None)
-        if is_correct is None:
-            if "result" in row.index:
-                is_correct = 1 if str(row["result"]).strip().lower() in ["1", "true", "correct", "yes"] else 0
-            else:
-                is_correct = 1 if str(row["student_answer"]).strip().lower() == str(row["correct_answer"]).strip().lower() else 0
+        # Save to DB
+        conn = get_db()
+        cursor = conn.cursor()
+        for sid in df["student_id"].unique():
+            cursor.execute("INSERT OR IGNORE INTO students (student_id) VALUES (?)", (str(sid),))
+        for _, row in df.drop_duplicates(subset=["question_id"]).iterrows():
+            cursor.execute(
+                "INSERT OR IGNORE INTO questions (question_id, question_text, correct_answer, subject, topic, concept) VALUES (?, ?, ?, ?, ?, ?)",
+                (
+                    str(row["question_id"]),
+                    str(row.get("question", "")) if not pd.isna(row.get("question")) else "",
+                    str(row["correct_answer"]),
+                    str(row.get("subject", "")) if not pd.isna(row.get("subject")) else "",
+                    str(row.get("topic", "")) if not pd.isna(row.get("topic")) else "",
+                    str(row.get("concept", "")) if not pd.isna(row.get("concept")) else "",
+                ),
+            )
+        for _, row in df.iterrows():
+            is_correct = row.get("is_correct", None)
+            if is_correct is None or pd.isna(is_correct):
+                if "result" in row.index and not pd.isna(row["result"]):
+                    is_correct = 1 if str(row["result"]).strip().lower() in ["1", "true", "correct", "yes"] else 0
+                else:
+                    is_correct = 1 if str(row["student_answer"]).strip().lower() == str(row["correct_answer"]).strip().lower() else 0
 
-        cursor.execute(
-            "INSERT INTO responses (student_id, question_id, student_answer, correct_answer, is_correct, subject, topic, concept, error_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (str(row["student_id"]), str(row["question_id"]), str(row["student_answer"]), str(row["correct_answer"]), int(is_correct), str(row.get("subject", "")), str(row.get("topic", "")), str(row.get("concept", "")), str(row.get("error_type", ""))),
-        )
-    conn.commit()
-    conn.close()
+            cursor.execute(
+                "INSERT INTO responses (student_id, question_id, student_answer, correct_answer, is_correct, subject, topic, concept, error_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    str(row["student_id"]),
+                    str(row["question_id"]),
+                    str(row["student_answer"]),
+                    str(row["correct_answer"]),
+                    int(is_correct),
+                    str(row.get("subject", "")) if not pd.isna(row.get("subject")) else "",
+                    str(row.get("topic", "")) if not pd.isna(row.get("topic")) else "",
+                    str(row.get("concept", "")) if not pd.isna(row.get("concept")) else "",
+                    str(row.get("error_type", "")) if not pd.isna(row.get("error_type")) else "",
+                ),
+            )
+        conn.commit()
+        conn.close()
 
-    save_analysis_to_db(_current_analysis, is_demo=False)
-    _load_fallback_interventions()
+        save_analysis_to_db(_current_analysis, is_demo=False)
+        _load_fallback_interventions()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing assessment dataset: {str(e)}")
 
     return {
         "status": "ok",

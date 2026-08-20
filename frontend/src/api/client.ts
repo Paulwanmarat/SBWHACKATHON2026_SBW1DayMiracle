@@ -5,9 +5,14 @@ const BASE_URL =
   'https://learnex-backend-679b.onrender.com/api';
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = {};
+  if (options?.body && !(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const response = await fetch(`${BASE_URL}${url}`, {
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
     ...options,
+    headers: { ...headers, ...options?.headers },
   });
 
   if (!response.ok) {

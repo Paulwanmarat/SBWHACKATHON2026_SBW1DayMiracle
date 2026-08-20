@@ -1,6 +1,8 @@
 // LEARNEX API Client
 
-const BASE_URL = '/api';
+const BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  'https://learnex-backend-679b.onrender.com/api';
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${url}`, {
@@ -30,14 +32,17 @@ export const api = {
   uploadAssessment: async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
+
     const response = await fetch(`${BASE_URL}/assessment/upload`, {
       method: 'POST',
       body: formData,
     });
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'Upload failed' }));
       throw new Error(error.detail || `HTTP ${response.status}`);
     }
+
     return response.json();
   },
 
@@ -47,16 +52,22 @@ export const api = {
 
   // Learning Gaps
   getLearningGaps: () => request<any>('/learning-gaps'),
-  getLearningGapDetail: (concept: string) => request<any>(`/learning-gaps/${encodeURIComponent(concept)}`),
+  getLearningGapDetail: (concept: string) =>
+    request<any>(`/learning-gaps/${encodeURIComponent(concept)}`),
 
   // Interventions
   getInterventions: () => request<any>('/interventions'),
   getIntervention: (id: number) => request<any>(`/interventions/${id}`),
+
   generateIntervention: (concept: string, learningGapId?: number) =>
     request<any>('/interventions/generate', {
       method: 'POST',
-      body: JSON.stringify({ concept, learning_gap_id: learningGapId }),
+      body: JSON.stringify({
+        concept,
+        learning_gap_id: learningGapId,
+      }),
     }),
+
   approveIntervention: (id: number) =>
     request<any>(`/interventions/${id}/approve`, {
       method: 'POST',
@@ -81,10 +92,15 @@ export const api = {
   // Post-Test
   getPostTestQuestions: (concept: string) =>
     request<any>(`/post-test/${encodeURIComponent(concept)}`),
+
   submitPostTest: (data: {
     student_id: string;
     concept: string;
-    answers: { question_index: number; selected_answer: string; is_correct: boolean }[];
+    answers: {
+      question_index: number;
+      selected_answer: string;
+      is_correct: boolean;
+    }[];
   }) =>
     request<any>('/post-test/submit', {
       method: 'POST',
@@ -92,5 +108,6 @@ export const api = {
     }),
 
   // Reports
-  getStudentReport: (id: string) => request<any>(`/reports/${id}`),
+  getStudentReport: (id: string) =>
+    request<any>(`/reports/${id}`),
 };

@@ -4,23 +4,35 @@ const BASE_URL =
   import.meta.env.VITE_API_URL ||
   'https://learnex-backend-679b.onrender.com/api';
 
-async function request<T>(url: string, options?: RequestInit): Promise<T> {
+async function request<T>(url: string, options?: RequestInit, retries = 2): Promise<T> {
   const headers: Record<string, string> = {};
   if (options?.body && !(options.body instanceof FormData)) {
     headers['Content-Type'] = 'application/json';
   }
 
-  const response = await fetch(`${BASE_URL}${url}`, {
-    ...options,
-    headers: { ...headers, ...options?.headers },
-  });
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(`${BASE_URL}${url}`, {
+        ...options,
+        headers: { ...headers, ...options?.headers },
+      });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
-    throw new Error(error.detail || `HTTP ${response.status}`);
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ detail: `HTTP ${response.status}` }));
+        throw new Error(error.detail || `HTTP ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (err: any) {
+      if (attempt < retries) {
+        // Wait 2.5s to allow backend cold-start spin-up on Render
+        await new Promise((resolve) => setTimeout(resolve, 2500));
+        continue;
+      }
+      throw err;
+    }
   }
-
-  return response.json();
+  throw new Error('Request failed');
 }
 
 export const api = {

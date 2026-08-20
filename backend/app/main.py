@@ -60,6 +60,18 @@ def _get_current_data():
     return _current_df, _current_analysis, _is_demo
 
 
+@app.on_event("startup")
+def startup_event():
+    """Auto-load synthetic demo data on startup to ensure API is ready out-of-the-box."""
+    global _current_analysis
+    if _current_analysis is None:
+        try:
+            load_demo_data()
+            print("Startup: Demo data loaded successfully.")
+        except Exception as e:
+            print(f"Startup warning: Could not auto-load demo data: {e}")
+
+
 # ──────────────────────────────────────
 # Health
 # ──────────────────────────────────────
